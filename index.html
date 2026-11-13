@@ -22,9 +22,9 @@ body{position:relative}
 #hud{display:flex;justify-content:space-around;align-items:center;padding:8px;background:var(--card);border-bottom:3px solid var(--line);font-size:18px;font-weight:700}
 #gw{flex:1;position:relative;min-height:0}
 #cv{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
-#bar{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:6px;background:var(--card);border-top:3px solid var(--line)}
-#bar button{border:0;background:none;color:var(--ink);font:inherit;font-size:10px;font-weight:700;padding:2px}
-#bar button span{display:block;font-size:22px}
+#bar{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:6px;background:var(--card);border-top:3px solid var(--line)}
+#bar button{border:0;background:none;color:var(--ink);font:inherit;font-size:9px;font-weight:700;padding:2px}
+#bar button span{display:block;font-size:20px}
 #modal{position:absolute;inset:0;background:#0008;display:none;align-items:flex-end;justify-content:center;z-index:5}
 .sheet{width:100%;max-width:520px;max-height:88%;background:var(--card);border-radius:22px 22px 0 0;display:flex;flex-direction:column;border:3px solid var(--line);border-bottom:0}
 .sh{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-size:20px;font-weight:700}
@@ -33,6 +33,7 @@ body{position:relative}
 .row{display:flex;align-items:center;gap:10px;padding:8px;border:2px solid var(--line);border-radius:14px;margin-bottom:8px}
 .row img{width:56px}.row .i{flex:1;font-size:14px}.col{display:flex;flex-direction:column;gap:5px}
 .tabs{display:flex;gap:6px;margin-bottom:10px}.tabs .b{flex:1;padding:8px 4px;font-size:14px;background:#a98a5a;box-shadow:0 3px 0 #7d6338}.tabs .on{background:var(--g);box-shadow:0 3px 0 var(--g2)}
+.tabs.t4 .b{font-size:12px;padding:8px 2px}
 .c{text-align:center}
 .ww{position:relative;width:250px;margin:22px auto 16px}
 .wl span{font-size:12px!important;left:-29px!important;width:58px!important}
@@ -79,6 +80,7 @@ textarea{width:100%;height:80px;font:12px monospace;border:2px solid var(--line)
 <button onclick="om('house')"><span>🏠</span>Дом</button>
 <button onclick="om('reb')"><span>♻️</span>Рождение</button>
 <button onclick="om('shop')"><span>🛒</span>Магазин</button>
+<button onclick="shopTab=3;om('shop')"><span>⚡</span>Прокачка</button>
 <button onclick="om('wheel')"><span>🎡</span>Колесо</button>
 <button onclick="menu()"><span>☰</span>Меню</button>
 </div></div>
@@ -107,16 +109,25 @@ const LC=[
 const svg=(c,r)=>{const X=r>=6,f=X?'url(#g)':c;return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 40">${X?'<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7df9ff"/><stop offset="1" stop-color="#b388ff"/></linearGradient></defs><path d="M28 15Q20 1 34 3Q37 9 33 15Z" fill="#e0f7ff" fill-opacity=".8" stroke="#00acc1"/><path d="M28 25Q20 39 34 37Q37 31 33 25Z" fill="#e0f7ff" fill-opacity=".8" stroke="#00acc1"/>':''}<path d="M26 18L20 6M31 17L31 4M36 18L42 6M26 22L20 34M31 23L31 36M36 22L42 34M50 15Q56 5 61 8M51 18Q59 14 62 17" stroke="#222" stroke-width="2.2" stroke-linecap="round" fill="none"/><ellipse cx="13" cy="20" rx="11" ry="8" fill="${f}" stroke="#222" stroke-width="2"/><ellipse cx="31" cy="20" rx="7" ry="6" fill="${f}" stroke="#222" stroke-width="2"/><circle cx="46" cy="20" r="8" fill="${f}" stroke="#222" stroke-width="2"/><circle cx="49" cy="17" r="2.5" fill="#fff"/><circle cx="50" cy="17" r="1.2" fill="#000"/><path d="M9 14Q7 20 9 26M15 13Q13 20 15 27" stroke="#0005" stroke-width="2" fill="none"/>${r>=4&&r<6?'<path d="M40 11L42 3L46 9L50 3L52 11Z" fill="#ffd400" stroke="#a67c00" stroke-width="1.2"/>':''}${X?'<ellipse cx="46" cy="8" rx="8" ry="2.6" fill="none" stroke="#ffd54f" stroke-width="2"/><path d="M6 7l1 2.5 2.5 1-2.5 1L6 14l-1-2.5-2.5-1 2.5-1z" fill="#ffd54f"/><path d="M57 26l1 2.5 2.5 1-2.5 1L57 33l-1-2.5-2.5-1 2.5-1z" fill="#fff"/>':''}</svg>`};
 const U=SK.map(k=>'data:image/svg+xml,'+encodeURIComponent(svg(k.c,k.r))),IM=U.map(u=>{const i=new Image();i.src=u;return i});
 $('mi').src=U[0];
-let S={v:0,m:0,n:0,h:1,r:0,q:0,loc:0,ol:LC.map((l,i)=>+!i),w:0,pt:0,nick:'',av:'',ants:[{s:0,l:1,on:true}]};
+let S={v:0,m:0,n:0,h:1,r:0,q:0,loc:0,ol:LC.map((l,i)=>+!i),w:0,pt:0,u:[0,0,0,0,0],nick:'',av:'',ants:[{s:0,l:1,on:true}]};
 try{const d=JSON.parse(localStorage.getItem('antf1'));if(d&&d.ants)S=Object.assign(S,d)}catch(e){}
 while(S.ol.length<LC.length)S.ol.push(0);
-const pack=()=>({v:S.v|0,m:S.m,n:S.n,h:S.h,r:S.r,q:S.q,loc:S.loc,ol:S.ol,w:S.w,pt:S.pt|0,nick:S.nick||'',av:S.av||'',ants:S.ants.map(a=>({s:a.s,l:a.l,on:a.on}))});
+const UP=[
+{n:'Частые орехи',e:'🌰',d:'Орехи появляются на поле чаще',b:40,f:1.55,max:15,t:l=>'+'+10*l+'% к частоте'},
+{n:'Быстрые лапки',e:'⚡',d:'Муравьи бегают быстрее',b:40,f:1.55,max:15,t:l=>'+'+6*l+'% к скорости'},
+{n:'Сочные орехи',e:'💰',d:'Больше денег за каждый орех',b:50,f:1.5,max:20,t:l=>'+'+10*l+'% денег'},
+{n:'Удача',e:'🍀',d:'Шанс получить двойные орешки',b:80,f:1.7,max:10,t:l=>l*5+'% шанс ×2'},
+{n:'Сильный тап',e:'👆',d:'Больше денег за тап по ореху',b:30,f:1.5,max:15,t:l=>'+'+20*l+'% денег'}];
+if(!Array.isArray(S.u))S.u=[];while(S.u.length<UP.length)S.u.push(0);
+const ul=i=>S.u[i]|0,ucost=i=>Math.round(UP[i].b*UP[i].f**ul(i));
+const upH=()=>`<div class="c"><p>Прокачка за 🌰 — остаётся навсегда, даже после перерождения</p></div>`+UP.map((k,i)=>{const l=ul(i),mx=l>=k.max,c=ucost(i);return `<div class="row"><div style="font-size:36px;width:56px;text-align:center">${k.e}</div><div class="i"><b>${k.n}</b> <small>ур. ${l}/${k.max}</small><br><small>${k.d}<br>${k.t(l)}${mx?'':' → '+k.t(l+1)}</small></div><div class="col">${bt('upg',i,mx?'МАКС':fmt(c)+'🌰','y',mx||S.n<c)}</div></div>`}).join('');
+const pack=()=>({v:S.v|0,m:S.m,n:S.n,h:S.h,r:S.r,q:S.q,loc:S.loc,ol:S.ol,u:S.u,w:S.w,pt:S.pt|0,nick:S.nick||'',av:S.av||'',ants:S.ants.map(a=>({s:a.s,l:a.l,on:a.on}))});
 const save=()=>{try{localStorage.setItem('antf1',JSON.stringify(pack()))}catch(e){}};
-const L=()=>LC[S.loc],mult=()=>(1+.5*S.r)*L().m,val=a=>Math.round(4*CARRY[SK[a.s].r]*(1+.25*(a.l-1))*mult()),upc=a=>Math.round(30*(1+SK[a.s].r)*1.5**(a.l-1)),hc=()=>Math.round(120*2.2**(S.h-1)),U1=()=>Math.round(40*S.h*mult());
+const L=()=>LC[S.loc],mult=()=>(1+.5*S.r)*L().m,val=a=>Math.round(4*CARRY[SK[a.s].r]*(1+.25*(a.l-1))*mult()*(1+.1*ul(2))),upc=a=>Math.round(30*(1+SK[a.s].r)*1.5**(a.l-1)),hc=()=>Math.round(120*2.2**(S.h-1)),U1=()=>Math.round(40*S.h*mult());
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const enc=()=>{const q=pack();q.av='';return btoa(unescape(encodeURIComponent(JSON.stringify(q))))},dec=t=>decodeURIComponent(escape(atob(t)));
 const fmt=n=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e4?(n/1e3).toFixed(1)+'K':Math.floor(n);
-const act=()=>S.ants.filter(a=>a.on).length,slots=()=>S.h+S.q,hirec=()=>Math.round(60*1.5**S.q);
+const act=()=>S.ants.filter(a=>a.on).length,slots=()=>S.h+S.q,hirec=()=>Math.round(60*1.5**S.q),rbm=()=>Math.round(1000*2.2**S.r),rbn=()=>Math.round(500*1.35**S.r),rbh=()=>Math.min(8,6+(S.r/3|0));
 let tt;const toast=t=>{const e=$('toast');e.textContent=t;e.style.opacity=1;clearTimeout(tt);tt=setTimeout(()=>e.style.opacity=0,1800)};
 /* ---------- game ---------- */
 const cv=$('cv'),cx=cv.getContext('2d');let W=0,H=0,dpr=1,bg,nuts=[],fls=[],sp=0,last=0,hudT=0,scr='menu';
@@ -124,10 +135,10 @@ function mkbg(){if(!W)return;bg=document.createElement('canvas');bg.width=W*dpr;
 function resize(){const r=cv.parentNode.getBoundingClientRect();if(!r.width)return;dpr=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;cv.width=W*dpr;cv.height=H*dpr;mkbg();S.ants.forEach(a=>{a.x=null})}
 addEventListener('resize',resize);
 function fl(x,y,s){fls.push({x,y,s,t:0})}
-function eat(a){const k=SK[a.s],c=CARRY[k.r],v=val(a);S.m+=v;S.n+=c;fl(a.x,a.y-14,`+${fmt(v)}💰 +${c}🌰`)}
+function eat(a){const k=SK[a.s],c=CARRY[k.r]*(Math.random()<.05*ul(3)?2:1),v=val(a);S.m+=v;S.n+=c;fl(a.x,a.y-14,`+${fmt(v)}💰 +${c}🌰`)}
 function step(dt,t){
 const hx=W/2,hy=H/2;sp-=dt;
-if(sp<=0){sp=2.2/(L().s*(1+.12*(S.h-1)));if(nuts.length<14)nuts.push({x:30+Math.random()*(W-60),y:30+Math.random()*(H-60),t:0})}
+if(sp<=0){sp=2.2/(L().s*(1+.12*(S.h-1))*(1+.1*ul(0)));if(nuts.length<14)nuts.push({x:30+Math.random()*(W-60),y:30+Math.random()*(H-60),t:0})}
 nuts.forEach(n=>n.t=Math.min(1,n.t+dt*3));
 for(const a of S.ants){if(!a.on)continue;
 if(a.x==null){a.x=hx+(Math.random()-.5)*50;a.y=hy+20;a.an=0;a.e=0}
@@ -137,7 +148,7 @@ let tx,ty;if(a.tg){tx=a.tg.x;ty=a.tg.y}else{if(!a.w)a.w={x:hx+(Math.random()-.5)
 const dx=tx-a.x,dy=ty-a.y,d=Math.hypot(dx,dy);
 if(d<9){if(a.tg)a.e=.4;else a.w=null;continue}
 const ta=Math.atan2(dy,dx);let da=ta-a.an;da=Math.atan2(Math.sin(da),Math.cos(da));a.an+=da*Math.min(1,dt*10);
-const sp2=44*(1+.05*(a.l-1))*(1+.05*SK[a.s].r);a.x+=Math.cos(a.an)*sp2*dt;a.y+=Math.sin(a.an)*sp2*dt}
+const sp2=44*(1+.05*(a.l-1))*(1+.05*SK[a.s].r)*(1+.06*ul(1));a.x+=Math.cos(a.an)*sp2*dt;a.y+=Math.sin(a.an)*sp2*dt}
 fls.forEach(f=>{f.t+=dt;f.y-=22*dt});fls=fls.filter(f=>f.t<1.2)}
 function draw(t){
 cx.setTransform(dpr,0,0,dpr,0,0);if(bg)cx.drawImage(bg,0,0,W,H);
@@ -155,7 +166,7 @@ cx.font='bold 15px sans-serif';
 for(const f of fls){cx.globalAlpha=Math.min(1,(1.2-f.t)*2);cx.strokeStyle='#000a';cx.lineWidth=3;cx.fillStyle='#fff';cx.strokeText(f.s,f.x,f.y);cx.fillText(f.s,f.x,f.y)}cx.globalAlpha=1}
 function loop(ts){requestAnimationFrame(loop);const dt=Math.min(.1,(ts-last)/1000||0);last=ts;if(scr!=='game'||!W)return;step(dt,ts/1000);draw(ts/1000);hudT-=dt;if(hudT<=0){hudT=.2;hud()}}
 function hud(){$('hm').textContent=fmt(S.m);$('hn').textContent=fmt(S.n);$('hx').textContent=`${L().e} ×${+mult().toFixed(1)} · 🐜 ${act()}/${slots()}`}
-cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();let x=e.clientX-r.left,y=e.clientY-r.top;for(let i=0;i<nuts.length;i++){const n=nuts[i];if(Math.hypot(n.x-x,n.y-y)<28){nuts.splice(i,1);const v=Math.round(4*mult());S.m+=v;S.n+=1;fl(x,y-10,`+${fmt(v)}💰 +1🌰`);break}}});
+cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();let x=e.clientX-r.left,y=e.clientY-r.top;for(let i=0;i<nuts.length;i++){const n=nuts[i];if(Math.hypot(n.x-x,n.y-y)<28){nuts.splice(i,1);const v=Math.round(4*mult()*(1+.2*ul(4))),g=Math.random()<.05*ul(3)?2:1;S.m+=v;S.n+=g;fl(x,y-10,`+${fmt(v)}💰 +${g}🌰`);break}}});
 /* ---------- screens ---------- */
 function show(s){scr=s;$('menu').style.display=s=='menu'?'flex':'none';$('game').style.display=s=='game'?'flex':'none'}
 function menu(){cm();show('menu');menu0();save()}
@@ -176,11 +187,11 @@ if(cur=='ants'){h=hireRow()+`<p class="c">В поле: <b>${act()}/${slots()}</b
 else if(cur=='house'){const c=hc(),mx=S.h>=8;h=`<div class="c"><div style="font-size:60px">🏠</div><h3>Уровень ${S.h} из 8</h3><p>Мест для муравьёв: <b>${slots()}</b> (дом ${S.h} + нанятые ${S.q})<br>Орешки появляются на ${Math.round(12*(S.h-1))}% быстрее</p>${bt('hup',0,mx?'Максимум':`Улучшить за ${fmt(c)}💰`,'',mx||S.m<c)}</div>`}
 else if(cur=='profile'){h=`<div class="c">${avH('big')}<p><button class="b y s" data-f="pick" data-i="0">📷 ${S.av?'Сменить фото':'Выбрать фото'}</button> ${S.av?bt('noav',0,'Убрать','r'):''}</p><p><small>Твой ник (до 16 символов):</small></p><input class="t" id="ni" maxlength="16" placeholder="Например: Муравьиный король" value="${esc(S.nick)}" autocomplete="off"><p><small>Ник и фото сохраняются автоматически.</small></p></div>`}
 else if(cur=='save'){h=`<div class="c"><p>Игра сохраняется сама каждые 5 секунд и при выходе.</p>${bt('savenow',0,'💾 Сохранить сейчас')}<p><small>Код сохранения — для переноса прогресса на другое устройство:</small></p><textarea id="sc" readonly>${enc()}</textarea><p>${bt('copy',0,'📋 Скопировать код','y')}</p><p><small>Загрузить прогресс из кода:</small></p><textarea id="si" placeholder="Вставь код сюда"></textarea><p>${bt('imp',0,'⬆ Загрузить код','y')} ${bt('wipe',0,wp?'Точно сбросить?':'🗑 Сбросить всё','r')}</p></div>`}
-else if(cur=='reb'){const ok=S.h>=6,nx=LC.find(l=>l.r>S.r);h=`<div class="c"><div style="font-size:60px">♻️</div><h3>Перерождений: ${S.r}</h3><p>Доход: <b>×${1+.5*S.r}</b> → <b>×${1+.5*(S.r+1)}</b> навсегда<br>Награда: +15🌰</p><p><small>Сбросятся деньги, уровни дома и муравьёв.<br>Останутся орешки, муравьи, нанятые места и локации.</small></p><p>${ok?'':'Нужен дом 6 уровня (сейчас '+S.h+')'}</p><p><small>${nx?`🗺 Дальше: ${nx.e} ${nx.n} — нужно ♻️ ${nx.r}`:'Все локации открыты'}</small></p>${bt('reb',0,'Переродиться','y',!ok)}</div>`}
-else if(cur=='shop'){h=`<div class="tabs">${['🎁 Кейс','🐜 Муравьи','🗺 Локации'].map((t,i)=>`<button class="b ${i==shopTab?'on':''}" data-f="tab" data-i="${i}">${t}</button>`).join('')}</div>`;
+else if(cur=='reb'){const pm=rbm(),pn=rbn(),hr=rbh(),ok=S.h>=hr&&S.m>=pm&&S.n>=pn,nx=LC.find(l=>l.r>S.r);h=`<div class="c"><div style="font-size:60px">♻️</div><h3>Перерождений: ${S.r}</h3><p>Доход: <b>×${1+.5*S.r}</b> → <b>×${1+.5*(S.r+1)}</b> навсегда<br>Награда: +15🌰</p><p><small>Спишется цена в орешках. Сбросятся деньги, уровни дома и муравьёв.<br>Останутся орешки, муравьи, нанятые места, локации и прокачка.</small></p><p><b>Цена перерождения:</b><br>${S.h>=hr?'✅':'❌'} Дом ${hr} ур. (сейчас ${S.h})<br>${S.m>=pm?'✅':'❌'} 💰 ${fmt(pm)} (есть ${fmt(S.m)})<br>${S.n>=pn?'✅':'❌'} 🌰 ${fmt(pn)} (есть ${fmt(S.n)})</p><p><small>${nx?`🗺 Дальше: ${nx.e} ${nx.n} — нужно ♻️ ${nx.r}`:'Все локации открыты'}</small></p>${bt('reb',0,'Переродиться','y',!ok)}</div>`}
+else if(cur=='shop'){h=`<div class="tabs t4">${['🎁 Кейс','🐜 Муравьи','🗺 Локации','⚡ Прокачка'].map((t,i)=>`<button class="b ${i==shopTab?'on':''}" data-f="tab" data-i="${i}">${t}</button>`).join('')}</div>`;
 if(shopTab==0)h+=`<div class="c"><p>Муравьи выпадают только из кейсов — и только за 💰</p></div>`+CS.map((c,i)=>`<div class="row"><div style="font-size:40px;width:56px;text-align:center">${c.e}</div><div class="i"><b>${c.n}</b><br><small>${c.w.map((w,j)=>w?`<span style="color:${RC[j]}">${RN[j]} ${w}%</span>`:'').join(' · ')}</small></div><div class="col">${bt('case',i,fmt(c.c)+'💰','y',S.m<c.c)}</div></div>`).join('');
 else if(shopTab==1)h+=hireRow()+SK.map((k,i)=>rowA(i,k.n,k.r,`<small>${CARRY[k.r]}🌰 за орех · ${k.ex?'только 👑 Премиум колесо':'только из кейсов'}</small>`,'')).join('');
-else h+=LC.map((l,i)=>`<div class="row"><div style="font-size:40px;width:56px;text-align:center">${l.e}</div><div class="i"><b>${l.n}</b><br><small>Доход ×${l.m} · орехи ×${l.s}${l.r?' · ♻️ '+l.r:''}</small></div><div class="col">${S.ol[i]?bt('loc',i,S.loc==i?'✔ Здесь':'Выбрать','',S.loc==i):bt('lbuy',i,S.r<l.r?'🔒 ♻️'+l.r:l.p+' 🌰','y',S.r<l.r||S.n<l.p)}</div></div>`).join('')}
+else if(shopTab==3)h+=upH();else h+=LC.map((l,i)=>`<div class="row"><div style="font-size:40px;width:56px;text-align:center">${l.e}</div><div class="i"><b>${l.n}</b><br><small>Доход ×${l.m} · орехи ×${l.s}${l.r?' · ♻️ '+l.r:''}</small></div><div class="col">${S.ol[i]?bt('loc',i,S.loc==i?'✔ Здесь':'Выбрать','',S.loc==i):bt('lbuy',i,S.r<l.r?'🔒 ♻️'+l.r:l.p+' 🌰','y',S.r<l.r||S.n<l.p)}</div></div>`).join('')}
 $('mb').innerHTML=h;hud();menu0()}
 const F={
 up(i){const a=S.ants[i],c=upc(a);if(S.m>=c&&a.l<20){S.m-=c;a.l++}},
@@ -188,12 +199,13 @@ tog(i){const a=S.ants[i];if(!a.on&&act()>=slots())return toast('Нет мест�
 hire(){const c=hirec();if(S.m<c||S.q>=40)return;S.m-=c;S.q++;const b=S.ants.find(a=>!a.on);if(b){b.on=true;b.x=null}toast('➕ Новое место в поле')},
 savenow(){save();toast('💾 Сохранено')},
 copy(){const t=$('sc');t.select();(navigator.clipboard?navigator.clipboard.writeText(t.value):Promise.reject()).then(()=>toast('Код скопирован'),()=>toast('Выдели код и скопируй вручную'))},
-imp(){try{const d=JSON.parse(dec($('si').value.trim()));if(!d||!Array.isArray(d.ants))throw 0;const n=Object.assign({m:0,n:0,h:1,r:0,q:0,loc:0,ol:LC.map((l,i)=>+!i),w:0,pt:0},d);n.nick=String(d.nick||S.nick||'').slice(0,16);n.av=S.av||'';n.v=S.v|0;if(Array.isArray(n.ol))while(n.ol.length<LC.length)n.ol.push(0);n.ants=d.ants.filter(a=>SK[a.s]).map(a=>({s:a.s,l:Math.min(20,a.l|0||1),on:!!a.on}));if(!n.ants.length||!Array.isArray(n.ol)||!LC[n.loc])throw 0;S=n;nuts.length=0;mkbg();save();toast('✔ Прогресс загружен')}catch(e){toast('Неверный код')}},
-wipe(){if(!wp){wp=1;return}wp=0;S={m:0,n:0,h:1,r:0,q:0,loc:0,ol:LC.map((l,i)=>+!i),w:0,pt:0,nick:S.nick,av:S.av,ants:[{s:0,l:1,on:true}]};nuts.length=0;mkbg();save();toast('Прогресс сброшен (профиль сохранён)')},
+imp(){try{const d=JSON.parse(dec($('si').value.trim()));if(!d||!Array.isArray(d.ants))throw 0;const n=Object.assign({m:0,n:0,h:1,r:0,q:0,loc:0,ol:LC.map((l,i)=>+!i),w:0,pt:0},d);n.nick=String(d.nick||S.nick||'').slice(0,16);n.u=UP.map((k,i)=>Math.max(0,Math.min(k.max,Array.isArray(d.u)?d.u[i]|0:0)));n.av=S.av||'';n.v=S.v|0;if(Array.isArray(n.ol))while(n.ol.length<LC.length)n.ol.push(0);n.ants=d.ants.filter(a=>SK[a.s]).map(a=>({s:a.s,l:Math.min(20,a.l|0||1),on:!!a.on}));if(!n.ants.length||!Array.isArray(n.ol)||!LC[n.loc])throw 0;S=n;nuts.length=0;mkbg();save();toast('✔ Прогресс загружен')}catch(e){toast('Неверный код')}},
+wipe(){if(!wp){wp=1;return}wp=0;S={m:0,n:0,h:1,r:0,q:0,loc:0,ol:LC.map((l,i)=>+!i),w:0,pt:0,u:UP.map(()=>0),nick:S.nick,av:S.av,ants:[{s:0,l:1,on:true}]};nuts.length=0;mkbg();save();toast('Прогресс сброшен (профиль сохранён)')},
 sell(i){const a=S.ants[i];S.n+=SELL[SK[a.s].r];S.ants.splice(i,1);if(!act())S.ants[0].on=true},
 hup(){const c=hc();if(S.m>=c&&S.h<8){S.m-=c;S.h++}},
-reb(){if(S.h<6)return;S.r++;S.m=0;S.h=1;S.n+=15;nuts.length=0;S.ants.forEach((a,i)=>{a.l=1;a.on=i<slots();a.x=null});toast('♻️ Перерождение! Доход ×'+(1+.5*S.r))},
+reb(){const pm=rbm(),pn=rbn();if(S.h<rbh()||S.m<pm||S.n<pn)return;S.n-=pn;S.r++;S.m=0;S.h=1;S.n+=15;nuts.length=0;S.ants.forEach((a,i)=>{a.l=1;a.on=i<slots();a.x=null});toast('♻️ Перерождение! Доход ×'+(1+.5*S.r))},
 tab(i){shopTab=i},
+upg(i){const k=UP[i],l=ul(i),c=ucost(i);if(l>=k.max||S.n<c)return;S.n-=c;S.u[i]=l+1;toast(k.e+' '+k.n+': ур. '+(l+1))},
 buy(i){const k=SK[i];if(S.n>=k.p){S.n-=k.p;addAnt(i);toast(k.n+' теперь у тебя!')}},
 case(i){const c=CS[i];if(S.m<c.c)return;S.m-=c.c;roll(null,c.w)},
 loc(i){S.loc=i;mkbg()},

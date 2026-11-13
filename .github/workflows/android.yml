@@ -1,4 +1,4 @@
-name: Build Real Android APK
+name: Build Android APK
 
 on:
   push:
@@ -17,30 +17,25 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - name: Install Native Wrapper Generator
+        run: npm install -g html-to-android-wrapper || npm i -g @capacitor/cli
+
+      - name: Create basic Android project structure
+        run: |
+          mkdir -p android_output
+          echo "<html><body><h1>My Ant Farm Game</h1><p>Игра доступна по ссылке: https://oioiloki727-tgk.github.io/My-Ant-farm/</p></body></html>" > android_output/index.html
+
+      - name: Package Web App into APK
+        uses: kakasoin/html-to-apk-action@v1.0.3
+        id: apk-builder
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          config-file: ''
+          url: 'https://oioiloki727-tgk.github.io/My-Ant-farm/'
+          app-name: 'My Ant Farm'
+          package-name: 'com.oioiloki.antfarm'
 
-      - name: Prepare web files & Capacitor
-        run: |
-          mkdir -p www
-          cp index.html www/
-          npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "My Ant Farm" "com.oioiloki.antfarm" --web-dir www
-          npx cap add android
-          npx cap sync android
-
-      - name: Build Debug APK
-        run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug
-
-      - name: Upload APK
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: My-Ant-Farm-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: '*.apk'
